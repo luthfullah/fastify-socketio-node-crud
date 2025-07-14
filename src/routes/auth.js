@@ -1,3 +1,4 @@
+import { login } from "../controllers/auth.js";
 import { createForm, getForms } from "../controllers/form.js";
 import { PrismaClient } from "../generated/prisma/index.js";
 // adjust path as needed
@@ -34,12 +35,12 @@ export default async function (app, opts) {
     return login(req, reply, app); // ⬅️ Calling controller function
   });
 
+  //forms
+  app.post("/submit", createForm);
+  app.get("/forms", getForms);
+
   // Protected route
   app.get("/me", { preValidation: [app.authenticate] }, async (req, reply) => {
     return { user: req.user };
   });
-
-  //forms
-  app.post("/submit", createForm);
-  app.get("/forms", getForms);
 }

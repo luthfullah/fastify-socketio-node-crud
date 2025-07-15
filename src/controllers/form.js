@@ -2,6 +2,14 @@
 import { PrismaClient } from "../generated/prisma/index.js";
 const prisma = new PrismaClient();
 
+export const getForms = async (req, reply) => {
+  const forms = await prisma.form.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  return reply.send(forms);
+};
+
 export const createForm = async (req, reply) => {
   console.log("Form countreq.server:", req);
   const body = req.body;
@@ -20,12 +28,4 @@ export const createForm = async (req, reply) => {
   req.server.io.emit("formCount", formCount);
 
   return reply.code(201).send({ msg: "Form submitted", form });
-};
-
-export const getForms = async (req, reply) => {
-  const forms = await prisma.form.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-
-  return reply.send(forms);
 };
